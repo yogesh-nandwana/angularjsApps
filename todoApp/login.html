@@ -1,0 +1,28 @@
+<html>
+    <head>
+        <title>Login</title>
+        <link rel="stylesheet" href="css/style.css"/>
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+        <!--script src="js/angular.min.js"></script-->
+        <script src="controllers/login.js"></script>
+    </head>
+
+    <body>
+            <div ng-app="todoApp" ng-controller="loginController" ng-init="loginDisabled=true;userIdErrMsg='Please enter userId!';pwdErrMsg='Please enter password!'">
+                <table>
+                    <tr>
+                        <td><span>UserId</span></td>
+                        <td><input type="text" ng-model="userId" ng-change="checkLoginBttn()" placeholder="{{userIdErrMsg}}"/></td>
+                    </tr>
+                    <tr>
+                        <td><span>Password</span></td>
+                        <td><input type="password" ng-model="pwd" ng-change="checkLoginBttn()" placeholder="{{pwdErrMsg}}"/></td>
+                    </tr>                   
+                    <tr>
+                        <td></td>
+                        <td><button ng-click="login()" ng-disabled="loginDisabled">Login</button></td>
+                    </tr> 
+                </table>              
+            </div>
+    </body>
+</html>

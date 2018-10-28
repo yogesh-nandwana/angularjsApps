@@ -1,0 +1,40 @@
+<html>
+<head>
+     <!--script src="js/angular.min.js"></script-->
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+    <script src="controllers/todo.js"></script>    
+    <link rel="stylesheet" href="css/style.css"/>    
+</head>
+
+<body>
+    <div ng-app="todoApp" ng-controller="todoController" ng-init="disabled=true;errorMSg=null">
+        <table ng-if="todos.length>0">
+            <tr>
+                <th><a href="#" ng-click="orderByField='serial'; reverseSort = !reverseSort">#<span ng-hide=reverseSort>^</span></a></th>              
+                <th><a href="#" ng-click="orderByField='text'; reverseSort = !reverseSort">Todo<span ng-hide=reverseSort>^</span></a></th>
+                <th><a href="#" ng-click="orderByField='isCompleted'; reverseSort = !reverseSort">Status<span ng-hide=reverseSort>^</span></a></th>                
+                <th>-</th>
+                <th><a href="#" ng-click="orderByField='cDate'; reverseSort = !reverseSort">Completion date<span ng-hide=reverseSort>^</span></a></th>                
+            </tr>
+            <tr ng-repeat="todo in todos |orderBy:orderByField:reverseSort">
+                <td>{{todo.serial}}</td>
+                <td>
+                    <span ng-if="isCompleted"><strike>{{todo.text}}</strike></span>
+                    <span ng-if="!isCompleted">{{todo.text}}</span>                
+                </td>                
+                <td><input type="checkbox" ng-model="isCompleted" ng-disabled="isCompleted" ng-click="updateStatus(todo)" />{{todo.isCompleted?"Completed":"Pending"}}</td>
+                <td><input type="button"  ng-model="isCompleted" ng-disabled="isCompleted" value="X" / ng-click="delete(todo)"></td>
+                <td><label>{{todo.cDate}}</label></td>
+            </tr>
+        </table>
+        <!--<ul ng-repeat="todo in todos">
+                <li>{{todo.serial}}) {{todo.text}}</li>
+            </ul>-->
+        <br>
+        <input type="text" ng-model="todoText" placeholder="Enter new todo!" ng-change="enableAddButton()">
+        <input type="button" value="+" ng-disabled="disabled" ng-click="add()" />
+        <label class="err">{{errorMsg}}</label>
+    </div>
+    
+</body>
+</html>
