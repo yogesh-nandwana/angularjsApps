@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Todo App</title>
+    <script src="script/angular.min.js"></script>  
+    <script src="script/angular-route.min.js"></script>  
+    <link rel="stylesheet" href="css/style.css"/>
+    <!-- script scr="js/app.js"></script-->
+</head>
+
+<body ng-app="todoApp" ng-init="loginDisabled=true;userIdErrMsg='Please enter userId!';pwdErrMsg='Please enter password!';disabled=true;errorMSg=null">
+    <h1>Todo App demo</h1>
+
+    <div ng-view>
+    </div>
+    
+    <script>
+    angular.module('todoApp', ['ngRoute']);
+
+    angular.module('todoApp').config(function($routeProvider){
+    	$routeProvider.
+    	when('/', {
+    		templateUrl: 'login.html',
+    		controller: 'loginController'
+    	}).
+    	when('/todo', {
+    		templateUrl: 'todo.html',
+    		controller: 'todoController'
+    	}).
+    	otherwise({
+    		redirectTo: '/'
+    	});
+    });
+    
+
+    angular.module('todoApp').controller("loginController", function ($scope,$location) {
+        $scope.login = function () {
+            if ("todouser" === $scope.userId && "todopwd" === $scope.pwd) {
+                    $location.path("/todo");
+            }else{
+            	$location.path("/angularjs-demo");
+            }
+        };
+        $scope.checkLoginBttn = function () {
+            if ($scope.userId == null) {
+                $scope.userIdErrMsg = "Please enter userId!";
+                $scope.loginDisabled = true;
+            } else if ($scope.pwd == null) {
+                $scope.pwdErrMsg = "Please enter password!";
+                $scope.loginDisabled = true;
+            } else {
+                $scope.loginDisabled = false;
+                $scope.userIdErrMsg = null;
+                $scope.pwdErrMsg = null;
+            }
+        };
+        //$scope.checkLoginBttn();
+    });
+
+    angular.module('todoApp').controller("todoController", function ($scope) {
+        $scope.todos = [];
+
+        $scope.enableAddButton = function () {
+            $scope.disabled = $scope.todoText == null ? true : false
+            if ($scope.disabled == false) {
+                $scope.errorMsg = null;
+            }
+        };
+
+        $scope.updateStatus = function (todo) {
+            var index = $scope.todos.indexOf(todo);
+            if (index > -1) {
+                var markedTodo = $scope.todos[index];
+                markedTodo.isCompleted = true;
+                markedTodo.cDate = new Date();
+            } else {
+                $scope.errorMsg = "Status update failed!";
+            }
+        };
+
+        $scope.add = function () {
+            var newTodo = {
+                "serial": $scope.todos.length + 1,
+                "text": $scope.todoText,
+                "isCompleted": false,
+                "cDate": ""
+            };
+            var existingTodoTexts = $scope.todos.map((addedTodos) => addedTodos.text);
+            if (!existingTodoTexts.includes($scope.todoText)) {
+                $scope.todos.push(newTodo);
+            } else {
+                $scope.errorMsg = "Todo already exists!";
+            }
+            $scope.todoText = null;
+            $scope.enableAddButton();
+        };
+        $scope.delete = function (todo) {
+            var index = $scope.todos.indexOf(todo);
+            $scope.todos.splice(index, 1);
+        };
+    });
+    </script>
+</body>
+</html>
